@@ -1,1 +1,75 @@
-# TBD
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+  name: factorium-svc
+  namespace: test-app
+spec:
+  ports:
+  - name: http-web
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: factorium-svc
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+  name: factorium-svc-sa
+  namespace: test-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: factorium-svc-deployment
+  namespace: test-app
+spec:
+  minReadySeconds: 3
+  progressDeadlineSeconds: 60
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: factorium-svc
+  template:
+    metadata:
+      annotations:
+        proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+      labels:
+        app.kubernetes.io/name: factorium-svc
+        app.beyondtrust.com/team: testteam
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: factorium-svc
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - envFrom:
+        image: hello-world:linux
+        imagePullPolicy: Always
+        name: primary
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 500m
+            memory: 384Mi
+          requests:
+            cpu: 100m
+            memory: 384Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - all
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+      serviceAccountName: factorium-svc-sa
+
