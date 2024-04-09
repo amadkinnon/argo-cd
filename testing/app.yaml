@@ -72,4 +72,24 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: false
       serviceAccountName: factorium-svc-sa
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: test-app
+data:
+  service.webhook.smeeio: |
+    url: https://smee.io/UxLbPSWXVGAbupy
+
+  template.compass-event: |
+    webhook:
+      smeeio:
+        method: POST
+        path: /
+        body: |
+          {
+            "APP": "{{ .app }}"
+          }
+      
 
