@@ -70,6 +70,6 @@ spec:
             drop:
             - all
           readOnlyRootFilesystem: true
-          runAsNonRoot: true
+          runAsNonRoot: false
       serviceAccountName: factorium-svc-sa
 
