@@ -52,7 +52,7 @@ spec:
             weight: 100
       containers:
       - envFrom:
-        image: hello-world:linux
+        image: hello-world:latest
         imagePullPolicy: Always
         name: primary
         ports:
