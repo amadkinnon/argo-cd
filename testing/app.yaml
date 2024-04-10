@@ -76,8 +76,22 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: argocd-cmd-params-cm
+data:
+  application.namespaces: test-app
+  notificationscontroller.selfservice.enabled: "true"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: argocd-notifications-cm
 data:
+  trigger.compass-app-deployed: |
+    - when: app.status.operationState.phase in ['Succeeded']
+      description: Application is synced and healthy. Triggered once per commit.
+      send: [compass-event]
+      oncePer: app.status.operationState.syncResult.revision
+
   service.webhook.smeeio: |
     url: https://smee.io/UxLbPSWXVGAbupy
 
@@ -88,14 +102,17 @@ data:
         path: /
         body: |
           {
-            "APP": "{{ .app }}"
+            "Application": "{{ .app.metadata.name }}",
+            "Image": "{{ .app.status.summary.images }}",
+            "SyncStart": "{{ .app.status.operationState.startedAt }}",
+            "SyncEnd": "{{ .app.status.operationState.finishedAt }}",
+            "REPO": "{{call .repo.FullNameByRepoURL .app.spec.source.repoURL }}",
           }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-cmd-params-cm
-data:
-  application.namespaces: test-app
-  notificationscontroller.selfservice.enabled: "true"
+
+  subscriptions: |
+    - recipients:
+      - smeeio
+    - triggers:
+      - on-sync-succeeded
+
 
