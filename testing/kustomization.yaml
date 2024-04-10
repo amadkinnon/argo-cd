@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: test-app
 resources:
 - app.yaml
+- notifications.yaml
