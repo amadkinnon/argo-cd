@@ -77,7 +77,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: argocd-notifications-cm
-  namespace: test-app
 data:
   service.webhook.smeeio: |
     url: https://smee.io/UxLbPSWXVGAbupy
