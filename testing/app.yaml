@@ -80,6 +80,7 @@ metadata:
 data:
   application.namespaces: test-app
   notificationscontroller.selfservice.enabled: "true"
+  notificationscontroller.log.level: "debug"
 ---
 apiVersion: v1
 kind: ConfigMap
