@@ -106,7 +106,7 @@ data:
             "Image": "{{ .app.status.summary.images }}",
             "SyncStart": "{{ .app.status.operationState.startedAt }}",
             "SyncEnd": "{{ .app.status.operationState.finishedAt }}",
-            "REPO": "{{call .repo.FullNameByRepoURL .app.spec.source.repoURL }}",
+            "REPO": "{{call .repo.FullNameByRepoURL .app.spec.source.repoURL }}"
           }
 
   subscriptions: |
