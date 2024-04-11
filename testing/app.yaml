@@ -94,6 +94,10 @@ data:
 
   service.webhook.smeeio: |
     url: https://smee.io/UxLbPSWXVGAbupy
+    headers:
+    - name: "content-type"
+      value: "application/json"
+
 
   template.compass-event: |
     webhook:
@@ -101,7 +105,7 @@ data:
         method: POST
         path: /
         body: |
-          "data": {
+          {
             "Application": "{{ .app.metadata.name }}",
             "Image": "{{ .app.status.summary.images }}",
             "SyncStart": "{{ .app.status.operationState.startedAt }}",
