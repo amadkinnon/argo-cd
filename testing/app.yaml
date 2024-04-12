@@ -116,7 +116,7 @@ data:
             {{- end}}
             {{- end}}
             "type": "deployment",
-            "metricName": "{{ .app.metadata.name }} deployment XXX",
+            "metricName": "{{ .app.metadata.name }} deployment NS",
             "newMetricValue": 1,
             "deployment": {
               "startedAt": "{{ .app.status.operationState.startedAt }}",
