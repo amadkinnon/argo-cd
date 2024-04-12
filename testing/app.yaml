@@ -94,7 +94,6 @@ data:
 
   service.webhook.compass-event: |
     url: https://4581c55e-7ef1-4572-b184-b54e77963a64.hello.atlassian-dev.net/x1/Sm4V7dSSSIb7HK9lrvoiBq-5VxE
-
     headers:
     - name: "Content-type"
       value: "application/json"
