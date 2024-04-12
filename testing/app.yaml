@@ -92,30 +92,45 @@ data:
       description: Application is synced and healthy. Triggered once per commit.
       send: [compass-event]
 
-  service.webhook.smeeio: |
-    url: https://smee.io/UxLbPSWXVGAbupy
-    headers:
-    - name: "content-type"
-      value: "application/json"
+  service.webhook.compass-event: |
+    url: https://4581c55e-7ef1-4572-b184-b54e77963a64.hello.atlassian-dev.net/x1/Sm4V7dSSSIb7HK9lrvoiBq-5VxE
 
+    headers:
+    - name: "Content-type"
+      value: "application/json"
+    - name: "Accept"
+      value: "application/json"
+    - name: "Authorization"
+      value: "Basic {{ .secrets.CompassToken }}"
 
   template.compass-event: |
     webhook:
-      smeeio:
+      compass-event:
         method: POST
         path: /
         body: |
           {
-            "Application": "{{ .app.metadata.name }}",
-            "Image": "{{ .app.status.summary.images }}",
-            "SyncStart": "{{ .app.status.operationState.startedAt }}",
-            "SyncEnd": "{{ .app.status.operationState.finishedAt }}",
-            "REPO": "{{call .repo.FullNameByRepoURL .app.spec.source.repoURL }}"
+            {{- range $idx, $c := .app.status.operationState.syncResult.resources }}
+            {{- if not $idx}}{{- continue }}{{- end}}
+            {{- if eq $c.kind "Service"}}
+            "externalName": "{{- $c.name }}",
+            {{- end}}
+            {{- end}}
+            "type": "deployment",
+            "metricName": "{{ .app.metadata.name }} deployment XXX",
+            "newMetricValue": 1,
+            "deployment": {
+              "startedAt": "{{ .app.status.operationState.startedAt }}",
+              "completedAt": "{{ .app.status.operationState.finishedAt }}",
+              "lastUpdated": "{{ .app.status.operationState.finishedAt }}",
+              "externalEventSourceId": "{{call .strings.ReplaceAll (index .app.metadata.annotations "project.github.source") "BeyondTrust/" "" }}",
+              },
+            "externalId": "{{ index .app.metadata.annotations "project.github.source" }}",
           }
 
   subscriptions: |
     - recipients:
-      - smeeio
+      - compass-event
     - triggers:
       - compass-app-deployed
 
