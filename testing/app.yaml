@@ -52,7 +52,7 @@ spec:
             weight: 100
       containers:
       - envFrom:
-        image: testcontainers/helloworld:latest
+        image: hello-world:latest
         env:
         - name: DELAY_START_MSEC
           value: "10000"
