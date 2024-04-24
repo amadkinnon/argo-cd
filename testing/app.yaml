@@ -52,10 +52,10 @@ spec:
             weight: 100
       containers:
       - envFrom:
-        image: hello-world:latest
+        image: testcontainers/helloworld:latest
         env:
         - name: DELAY_START_MSEC
-          value: "10000"
+          value: "30000"
         imagePullPolicy: Always
         name: primary
         ports:
