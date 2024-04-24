@@ -39,7 +39,7 @@ spec:
         proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
       labels:
         app.kubernetes.io/name: factorium-svc
-        app.beyondtrust.com/team: testteam
+        app.beyondtrust.com/team: testteamx
     spec:
       affinity:
         podAntiAffinity:
